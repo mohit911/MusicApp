@@ -20,7 +20,7 @@ def average(ratings):
 
 @api_view(['GET', 'POST'])
 def all_tracks(request):
-    """List all snippets, or create a new snippet."""
+    """List all Tracks."""
     try:
         if request.method == 'GET':
             tracks = Music.objects.all()
@@ -44,6 +44,7 @@ def all_tracks(request):
         data = OrderedDict([('count', 0), ('next', None), ('previous', None), ('results', 'Failed To display tracks')])
         return Response(data)
 
+    """Creating new Track."""
     try:
         if request.method == 'POST':
             try:
@@ -80,6 +81,7 @@ def all_tracks(request):
 
 @api_view(['GET', 'POST'])
 def track_detail(request, id):
+    """List details of a Tracks."""
     try:
         if request.method == 'GET':
             track_obj = Music.objects.get(id=id)
@@ -96,6 +98,7 @@ def track_detail(request, id):
         data = OrderedDict([('count', 0), ('next', None), ('previous', None), ('results', 'Track Not Found')])
         return Response(data)
 
+    """Edit Track Details."""
     try:
         if request.method == 'POST':
             try:
@@ -138,7 +141,7 @@ def track_detail(request, id):
 
 @api_view(['GET', 'POST'])
 def all_generes(request):
-    """List all snippets, or create a new snippet."""
+    """List all Genres."""
     try:
         if request.method == 'GET':
             generes = Genere.objects.all()
@@ -159,6 +162,7 @@ def all_generes(request):
         data = OrderedDict([('count', 0), ('next', None), ('previous', None), ('results', 'Genre Not Found')])
         return Response(data)
 
+    """Creating new Genre."""
     try:
         data = {}
         if request.method == 'POST':
@@ -177,6 +181,7 @@ def all_generes(request):
 
 @api_view(['GET', 'POST'])
 def genere_detail(request, id):
+    """List details of a Genre."""
     try:
         if request.method == 'GET':
             genere = Genere.objects.get(id=id)
@@ -187,6 +192,7 @@ def genere_detail(request, id):
         data = OrderedDict([('count', 0), ('next', None), ('previous', None), ('results', 'Genre Not Found')])
         return Response(data)
 
+    """Edit Genre Details."""
     try:
         if request.method == 'POST':
             try:
@@ -207,6 +213,7 @@ def genere_detail(request, id):
 
 @api_view(['GET', ])
 def search_api(request):
+    """Api for search."""
     title = request.GET.get('title')
     try:
         if request.method == 'GET':

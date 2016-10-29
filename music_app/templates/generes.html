@@ -3,6 +3,7 @@
 {% block content %}
 
 <br>
+<!-- Search Bar -->
   <nav>
     <div class="nav-wrapper">
       <form method="GET" action="{% url 'search_genres' %}">
@@ -15,6 +16,7 @@
     </div>
   </nav>
 
+<!-- Displaying Genre -->
       <div class="collection">
     		{% for genre in genres.object_list %}
     			<a href="#modal-{{genre.id}}" class="collection-item modal-trigger">{{genre.genere}}</a>
@@ -55,16 +57,10 @@
         <form class="col s12" method='POST' action="{% url 'g_detail' genre.id %}">
         {% csrf_token %}
           <div class="row">
-           
-
             <div class="input-field col s12">
               <input id="title" type="text" placeholder="{{genre.genere}}" class="validate" name="genre">
               <label for="genre">Genre</label>
             </div>
-        
-
-        
-
           </div>
           <button class="btn waves-effect waves-light" type="submit">Save<i class="material-icons right">send</i>
         </form>
@@ -75,7 +71,7 @@
 {% endfor %}
 
 
-
+<!-- Pagination -->
 <div class="row">
     <ul class="pagination">
     {% if genres.has_previous %}

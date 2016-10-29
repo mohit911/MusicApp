@@ -3,6 +3,7 @@
 {% block content %}
 
 <br>
+<!-- Search Bar -->
   <nav>
     <div class="nav-wrapper">
       <form method="GET" action="{% url 'search_tracks' %}">
@@ -15,6 +16,7 @@
     </div>
   </nav>
 
+<!-- Displaying Tracks -->
 	  <ul class="collection with-header">
 	  {% for track in data.object_list %}
 	  	<a href="#modal-{{track.id}}" class="collection-item modal-trigger">{{track.title}} [{{track.genere}}]
@@ -56,8 +58,8 @@
 				    <label>Genre</label>
 				</div>
 
-				<div class="input-field col s12">
-				    <select id='ratings' name="rating" {% if not request.user.username %} disabled {%endif%}>
+				<div class="input-field col s12" {% if not request.user.username %} id='ratings' {%endif%}>
+				    <select name="rating" {% if not request.user.username %} disabled {%endif%}>
 				      <option value="" disabled selected>Choose your option</option>
 				      <option value="1">1</option>
 				      <option value="2">2</option>
@@ -100,7 +102,7 @@
 				    <label>Genre</label>
 				</div>
 
-				<div class="input-field col s12">
+				<div class="input-field col s12" {% if not request.user.username %} id='ratings2' {%endif%}>
 				    <select name="rating" {% if not request.user.username %} disabled {%endif%}>
 				      {% if track.music_track.all|user_rating:request == None %}
 				      		<option value="" disabled selected>Choose your option</option>
@@ -122,7 +124,7 @@
 {% endfor %}
 
 
-
+<!-- Pagination -->
 <div class="row">
     <ul class="pagination">
 		{% if data.has_previous %}
@@ -148,15 +150,21 @@
 </div>
 	
 
-
+<!-- js Block -->
 {% block js %}
 	<script type="text/javascript">
 		$(document).ready(function(){
-    		// the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
     		$('.modal-trigger').leanModal();
 
     		$('select').material_select();
 
+    		$("#ratings2").click(function(){
+		        alert("Please Login to give rating.");
+		    });
+
+		    $("#ratings").click(function(){
+		        alert("Please Login to give rating.");
+		    });
 		});
          
 	</script>

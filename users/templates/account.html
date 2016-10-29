@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+    {%if account %}
+    <p>
+        <h1>Here's what we know about you!</h1>
+        <img src="/media/{{account.profile_picture}}" width="160" height ="160"/>
+    </p>
+    {%endif%}
+
+    <p>
+        <form action="{% url 'account' %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <p>
+                <label>First Name</label>
+                <input type="text" name="first_name" value="{{account.first_name}}">
+
+                <label>Last Name</label>
+                <input type="text" name="last_name" value="{{account.last_name}}">
+            </p>
+
+            <p> <label>Sex</label>
+                <select name="sex">
+                    {% if account.gender == 'Male' %}
+                        <option value="Male" selected>Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Others">Others</option>
+                    {% elif account.gender == 'Female' %}
+                        <option value="Male">Male</option>
+                        <option value="Female" selected>Female</option>
+                        <option value="Others">Others</option>
+                    {% elif account.gender == 'Others' %}
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value='Others' selected>Others</option>
+                    {% else %}
+                        <option value="" disabled selected>Choose your option</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value='Others'>Others</option>
+                    {% endif %}
+                </select>
+
+            </p>
+
+            <p>
+                <label>Profile Picture</label>
+                <input type="file" name="profile_picture">
+            </p>
+
+            <input class="btn btn-primary" type='submit' value='Save Me'>
+        </form>
+    </p>
+
+{% block js %}
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('select').material_select();
+        });
+         
+    </script>
+{% endblock js %}
+
+{% endblock %}
+
+

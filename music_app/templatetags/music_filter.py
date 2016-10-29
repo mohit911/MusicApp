@@ -7,6 +7,7 @@ register = template.Library()
 
 @register.filter
 def average(ratings):
+    """Calculating Average of ratings in 1 Music Track."""
     try:
         count = 0
         counter = 0
