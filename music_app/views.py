@@ -17,11 +17,15 @@ def tracks(request):
             else:
                 title = request.POST.get('title')
                 rating = request.POST.get('rating')
-                genere = request.POST.get('genere')
-                genere = Genere.objects.get(id=genere)
                 music_info = Music.objects.create(
-                    title=title,
-                    genere=genere)
+                    title=title)
+                genere_list = request.POST.getlist('genere')
+                for genre in genere_list:
+                    try:
+                        genere_obj = Genere.objects.get(id=genre)
+                        music_info.genere.add(genere_obj)
+                    except:
+                        pass
                 Rating.objects.create(
                     music=music_info,
                     user=request.user,
@@ -48,22 +52,31 @@ def tracks(request):
 def t_detail(request, id):
     context = {}
     if request.method == 'POST':
-        '''Saving New Track'''
+        '''Updating Track'''
         try:
             music_info = Music.objects.get(id=id)
-            rating_info = Rating.objects.get_or_create(music=music_info, user=request.user)
             if request.POST.get('title') != '':
                 title = request.POST.get('title')
                 music_info.title = title
-            if request.POST.get('rating') != '':
+                music_info.save()
+
+            if request.POST.getlist('genere') != '':
+                genere_list = request.POST.getlist('genere')
+                for i in music_info.genere.all():
+                    music_info.genere.remove(i)
+                for genre in genere_list:
+                    try:
+                        genere_obj = Genere.objects.get(id=genre)
+                        music_info.genere.add(genere_obj)
+                    except:
+                        pass
+                music_info.save()
+
+            if request.POST.get('rating') != '' and request.user.is_authenticated():
+                rating_info = Rating.objects.get_or_create(music=music_info, user=request.user)
                 rating = request.POST.get('rating')
                 rating_info[0].rating = rating
                 rating_info[0].save()
-            if request.POST.get('genere') != '':
-                genere = request.POST.get('genere')
-                genere = Genere.objects.get(id=genere)
-                music_info.genere = genere
-            music_info.save()
         except:
             context['message'] = 'Failed to update, Try again later'
 

@@ -19,7 +19,11 @@
 <!-- Displaying Tracks -->
 	  <ul class="collection with-header">
 	  {% for track in data.object_list %}
-	  	<a href="#modal-{{track.id}}" class="collection-item modal-trigger">{{track.title}} [{{track.genere}}]
+	  	<a href="#modal-{{track.id}}" class="collection-item modal-trigger">{{track.title}} [{% for genre in track.genere.all %}
+	  		{{genre}} {% if not forloop.last %}
+                             |
+                         {% endif %}
+	  	{% endfor %}]
 	  	{% if track.music_track.all|average != 0 %}
 	 
 	  	<i class="secondary-content">({{track.music_track.all.count}})</i>
@@ -49,7 +53,7 @@
 		          <label for="title">Title</label>
 		        </div>
 				<div class="input-field col s12">
-				    <select name="genere">
+				    <select name="genere" multiple>
 				      <option value="" disabled selected>Choose your option</option>
 				      {% for genre in genres %}
 				      	  <option value="{{genre.id}}">{{genre.genere}}</option>
@@ -94,9 +98,10 @@
 		          <label for="title">Title</label>
 		        </div>
 				<div class="input-field col s12">
-				    <select name="genere">
+				    <select name="genere" multiple>
+				      <option value="" disabled selected>Choose your option</option>
 				      {% for genre in genres %}
-				      	  <option {% if genre.id == track.genere.id %} selected {%endif%} value="{{genre.id}}">{{genre.genere}}</option>
+				      	  <option {% if genre in track.genere.all %} selected {%endif%} value="{{genre.id}}">{{genre.genere}}</option>
 				      {% endfor %}
 				    </select>
 				    <label>Genre</label>

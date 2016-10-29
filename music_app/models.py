@@ -17,19 +17,13 @@ class Genere(models.Model):
 
 
 class Music(models.Model):
-    genere = models.ForeignKey(
-        Genere,
-        blank=False,
-        null=False)
+    genere = models.ManyToManyField(
+        Genere)
 
     title = models.CharField(
         max_length=255,
         blank=False,
         null=False)
-
-    rating = models.IntegerField(
-        blank=True,
-        null=True)
 
     created_at = models.DateTimeField(
         auto_now_add=True)

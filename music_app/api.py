@@ -34,7 +34,8 @@ def all_tracks(request):
             track_list = []
             for track in track_objs:
                 genere_list = []
-                genere_list.append(OrderedDict([('id', track.genere.id), ('name', track.genere.genere)]))
+                for i in track.genere.all():
+                    genere_list.append(OrderedDict([('id', i.id), ('name', i.genere)]))
                 track_list.append(OrderedDict([('id', track.id), ('title', track.title), ('rating', average(track.music_track.all())), ('genres', genere_list)]))
 
             data = OrderedDict([('count', count), ('next', paginator.get_next_link()), ('previous', paginator.get_previous_link()), ('results', track_list)])
@@ -51,11 +52,15 @@ def all_tracks(request):
                 load = request.data
 
                 title = load['title']
-                genere = load['genres'][0]
-                genere = Genere.objects.get(id=genere)
                 music_info = Music.objects.create(
-                    title=title,
-                    genere=genere)
+                    title=title)
+                for genre in load['genres']:
+                    try:
+                        genere_obj = Genere.objects.get(id=genre)
+                        music_info.genere.add(genere_obj)
+                    except:
+                        pass
+
                 data = {'message': 'Track added'}
                 try:
                     rate = int(load['rating'])
@@ -87,7 +92,8 @@ def track_detail(request, id):
             track_obj = Music.objects.get(id=id)
 
             genere_list = []
-            genere_list.append(OrderedDict([('id', track_obj.genere.id), ('name', track_obj.genere.genere)]))
+            for i in track_obj.genere.all():
+                genere_list.append(OrderedDict([('id', i.id), ('name', i.genere)]))
 
             track_list = []
             track_list.append(OrderedDict([('id', track_obj.id), ('title', track_obj.title), ('rating', average(track_obj.music_track.all())), ('genres', genere_list)]))
@@ -106,13 +112,21 @@ def track_detail(request, id):
                 track = Music.objects.get(id=load['id'])
                 if 'title' in load:
                     track.title = load['title']
+                    track.save()
+
                 if 'genres' in load:
-                    try:
-                        genere = Genere.objects.get(id=load['genres'][0])
-                        track.genere = genere
-                    except:
-                        pass
-                track.save()
+
+                    genere_list = load['genres']
+                    for i in track.genere.all():
+                        track.genere.remove(i)
+                    for genre in genere_list:
+                        try:
+                            genere_obj = Genere.objects.get(id=genre)
+                            track.genere.add(genere_obj)
+                        except:
+                            pass
+                    track.save()
+
                 data = {'message': 'track updated'}
                 try:
                     rate = int(load['rating'])
